@@ -22,8 +22,9 @@ app.get('/', function (req, res) {
 app.get('/webhook/', function (req, res) {
 	if (req.query['hub.verify_token'] === 'jsdmomowonimiow') {
 		res.send(req.query['hub.challenge'])
+	} else{
+		res.send('Error, wrong token')
 	}
-	res.send('Error, wrong token')
 })
 
 // Spin up the server
@@ -33,15 +34,23 @@ app.listen(app.get('port'), function() {
 
 app.post('/webhook/', function (req, res) {
 	//console.log(req, res);
-    messaging_events = req.body.entry[0].messaging
+    let messaging_events = req.body.entry[0].messaging
     for (i = 0; i < messaging_events.length; i++) {
-        event = req.body.entry[0].messaging[i]
-        sender = event.sender.id
-        if (event.message && event.message.text) {
-            text = event.message.text
-			sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
-			console.log("TEXT---" + text.toString())
-        }
+			let event = req.body.entry[0].messaging[i]
+			let sender = event.sender.id
+			if (event.message && event.message.text) {
+				let text = event.message.text
+				if(text === 'Generic'){
+					console.log('Miku_N says Hi')
+					continue
+				}
+				sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
+		}
+		if(event.postback){
+			let text = JSON.stringify(event.postback)
+			sendTextMessage(sender, "Postback received: "+text.substring(0, 200), token)
+			continue
+		}
 	}
     res.sendStatus(200)
 })
@@ -49,7 +58,7 @@ app.post('/webhook/', function (req, res) {
 var token = "EAAHGdCAeol8BAKXkHiCD45MZBBAcb8cZAFHLrw5vIcKISt4QBZCvfsKYqWixQjQ2SwfZApO6C2MFZAP0Ixzr9rSRcf7ZBFUjZBVuV58jgGmrsyrWxexZBDqVSER4SwySCsPMaZAmgpE5chzMMC17l6UpFZCr6fI0Czq3TW9I2izM0XiQ9SCO1ykIkt"
 
 function sendTextMessage(sender, text) {
-    messageData = {
+    let messageData = {
         text:text
     }
     request({
