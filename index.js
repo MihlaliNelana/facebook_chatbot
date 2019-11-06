@@ -44,6 +44,26 @@ app.post('/webhook/', function (req, res) {
     res.sendStatus(200)
 })
 
-var token = "EAAHGdCAeol8BAFRLk1gQPSLzLnrhEaPQsTL3UMctKBaGwWJMKQcDUnHF1IJZCaZCu5J2xtHS57PksmsTgogjjWNQriU5bz3qcymheaCQcSqnRJZAZADfzX1l0KQhrpdb2gxJ7Lqzlb2IPvi18x8ZAw9egtlwZA7vVJ6A8UtK83MIYcJ33vHzhH"
+var token = "EAAHGdCAeol8BAKXkHiCD45MZBBAcb8cZAFHLrw5vIcKISt4QBZCvfsKYqWixQjQ2SwfZApO6C2MFZAP0Ixzr9rSRcf7ZBFUjZBVuV58jgGmrsyrWxexZBDqVSER4SwySCsPMaZAmgpE5chzMMC17l6UpFZCr6fI0Czq3TW9I2izM0XiQ9SCO1ykIkt"
 
-//EAAHGdCAeol8BAFRLk1gQPSLzLnrhEaPQsTL3UMctKBaGwWJMKQcDUnHF1IJZCaZCu5J2xtHS57PksmsTgogjjWNQriU5bz3qcymheaCQcSqnRJZAZADfzX1l0KQhrpdb2gxJ7Lqzlb2IPvi18x8ZAw9egtlwZA7vVJ6A8UtK83MIYcJ33vHzhH
+function sendTextMessage(sender, text) {
+    messageData = {
+        text:text
+    }
+    request({
+        url: 'https://graph.facebook.com/v2.6/me/messages',
+        qs: {access_token:token},
+        method: 'POST',
+        json: {
+            recipient: {id:sender},
+            message: messageData,
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending messages: ', error)
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error)
+        }
+    })
+}
+//curl -X POST "https://graph.facebook.com/v2.6/me/subscribed_apps?access_token=EAAHGdCAeol8BAKXkHiCD45MZBBAcb8cZAFHLrw5vIcKISt4QBZCvfsKYqWixQjQ2SwfZApO6C2MFZAP0Ixzr9rSRcf7ZBFUjZBVuV58jgGmrsyrWxexZBDqVSER4SwySCsPMaZAmgpE5chzMMC17l6UpFZCr6fI0Czq3TW9I2izM0XiQ9SCO1ykIkt"
