@@ -42,7 +42,7 @@ app.post('/webhook/', function (req, res) {
             sendTextMessage(sender, "Text received, echo: " + text.substring(0, 200))
         }
 	}
-	console.log("text" + text)
+	console.log("text" + text.toString())
     res.sendStatus(200)
 })
 
